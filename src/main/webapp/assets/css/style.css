@@ -1,0 +1,573 @@
+body {
+	margin: 0;
+	font-family: Arial, sans-serif;
+	background-color: #0f0f12;
+	color: #e8e8e8;
+}
+
+/* Container */
+.container {
+	padding: 25px 40px;
+}
+
+/* Navbar */
+.navbar {
+	background-color: #14161a;
+	padding: 12px 30px;
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+}
+
+.navbar a {
+	color: #cfd3ff;
+	text-decoration: none;
+	margin-right: 18px;
+}
+
+.navbar a:hover {
+	color: #ffffff;
+}
+
+/* Buttons */
+.btn {
+	background: #5865f2;
+	border: none;
+	padding: 10px 18px;
+	color: #fff;
+	cursor: pointer;
+	border-radius: 6px;
+	text-decoration: none;
+}
+
+.btn:hover {
+	opacity: .9;
+	text-decoration: none;
+}
+
+/* Product grid */
+.game-grid {
+	display: grid;
+	grid-template-columns: repeat(4, 1fr);
+	gap: 18px;
+}
+
+.game-card {
+	background: #1b1e24;
+	border-radius: 10px;
+	padding: 10px;
+	transition: .2s;
+}
+
+.game-card:hover {
+	transform: translateY(-4px);
+}
+
+.game-card img {
+	width: 100%;
+	height: 200px;
+	border-radius: 8px;
+	object-fit: cover;
+}
+
+/* Inputs */
+.input-box {
+	width: 100%;
+	padding: 10px;
+	margin-bottom: 10px;
+	border-radius: 6px;
+	border: none;
+}
+
+.details-card {
+	display: flex;
+	gap: 30px;
+	padding: 20px;
+	border-radius: 16px;
+	background: rgba(255, 255, 255, 0.06);
+	box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+	margin-top: 20px;
+}
+
+.details-img {
+	width: 380px;
+	border-radius: 14px;
+	object-fit: cover;
+}
+
+.details-right {
+	max-width: 500px;
+}
+
+/* Cart Page */
+
+/* =======================
+   CART PAGE STYLES
+======================= */
+.cart-container {
+	display: flex;
+	gap: 40px;
+	margin-top: 30px;
+	align-items: flex-start;
+}
+
+.cart-list {
+	flex: 3;
+}
+
+/* Cart Item Card */
+.cart-item {
+	display: flex;
+	gap: 20px;
+	background: #1b1e24;
+	padding: 16px;
+	border-radius: 14px;
+	margin-bottom: 18px;
+}
+
+/* Game Image */
+.cart-item img {
+	width: 180px;
+	height: 110px;
+	object-fit: cover;
+	border-radius: 12px;
+}
+
+/* Right Content */
+.cart-details {
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
+	flex: 1;
+}
+
+.cart-details h3 {
+	margin: 0;
+}
+
+/* Price / Qty row */
+.cart-meta {
+	display: flex;
+	gap: 20px;
+	font-size: 14px;
+	opacity: 0.9;
+}
+
+/* Remove button */
+.btn-remove {
+	width: fit-content;
+	margin-top: 10px;
+	background: #e74c3c;
+}
+
+/* Summary Box */
+.cart-summary {
+	flex: 1;
+	background: #1b1e24;
+	padding: 22px;
+	border-radius: 16px;
+	position: sticky;
+	top: 90px;
+}
+
+.cart-summary h3 {
+	margin-top: 0;
+}
+
+.cart-summary h2 {
+	margin: 12px 0 18px;
+}
+
+.checkout-btn {
+	width: 100%;
+	text-align: center;
+}
+
+/*ADMIN*/
+.manage-product-container{
+	display:flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+	gap:1rem;
+}
+
+
+
+.admin-table {
+	margin-top: 20px;
+	width: 100%;
+	max-width: 900px;
+}
+
+.admin-table-header, .admin-table-row {
+	display: grid;
+	grid-template-columns: 100px 1fr 120px 180px;
+	align-items: center;
+	padding: 12px;
+	border-bottom: 1px solid #2a2a2a;
+}
+
+.admin-table-header {
+	font-weight: bold;
+	color: #bbb;
+}
+
+.admin-table-row:hover {
+	background: rgba(255, 255, 255, 0.03);
+}
+
+.admin-product-img {
+	width: 70px;
+	border-radius: 8px;
+}
+
+.action-buttons {
+	display: flex;
+	gap: 10px;
+}
+
+.btn-sm {
+	padding: 6px 14px;
+	border-radius: 6px;
+	background: #5a67ff;
+	color: white;
+	text-decoration: none;
+	font-size: 14px;
+}
+
+.btn-sm.danger {
+	background: #ff4d4d;
+}
+
+/*Users admin*/
+
+/* ---------- Admin Common ---------- */
+.user-container {
+	display: flex;
+	flex-direction: column; justify-content : center;
+	align-items: center;
+	justify-content: center;
+	gap:0.5rem;
+}
+
+.page-title {
+	margin-bottom: 20px;
+	font-size: 26px;
+	font-weight: 600;
+}
+
+.admin-card {
+	background: #111;
+	border-radius: 14px;
+	padding: 20px;
+	box-shadow: 0 10px 30px rgba(0, 0, 0, 0.6);
+}
+
+/* ---------- Admin Table ---------- */
+.admin-table {
+	width: 100%;
+	border-collapse: collapse;
+	color: #fff;
+}
+
+.admin-table thead {
+	background: #1b1b1b;
+}
+
+.admin-table th, .admin-table td {
+	padding: 14px 16px;
+	text-align: left;
+}
+
+.admin-table th {
+	font-size: 14px;
+	text-transform: uppercase;
+	color: #aaa;
+	letter-spacing: 0.6px;
+}
+
+.admin-table tr {
+	border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.admin-table tbody tr:hover {
+	background: rgba(255, 255, 255, 0.04);
+	transition: 0.2s ease;
+}
+
+/* ---------- Role Badges ---------- */
+.role-badge {
+	padding: 6px 12px;
+	border-radius: 999px;
+	font-size: 12px;
+	font-weight: 600;
+	letter-spacing: 0.5px;
+}
+
+.role-badge.customer {
+	background: rgba(79, 140, 255, 0.15);
+	color: #4f8cff;
+}
+
+.role-badge.admin {
+	background: rgba(255, 99, 99, 0.15);
+	color: #ff6363;
+}
+
+
+
+/* ---------- Orders Admin ---------- */
+
+.order-card {
+    background: #111;
+    border-radius: 16px;
+    padding: 20px;
+    margin-bottom: 24px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.6);
+}
+
+.order-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 14px;
+}
+
+.order-id {
+    font-size: 18px;
+    font-weight: 600;
+}
+
+.order-meta {
+    display: flex;
+    gap: 40px;
+    margin-bottom: 16px;
+    font-size: 14px;
+    color: #ccc;
+}
+
+/* ---------- Status Badges ---------- */
+
+.status-badge {
+    padding: 6px 14px;
+    border-radius: 999px;
+    font-size: 12px;
+    font-weight: 600;
+}
+
+.status-badge.paid {
+    background: rgba(0, 200, 120, 0.15);
+    color: #00c878;
+}
+
+.status-badge.payment_failed {
+    background: rgba(255, 90, 90, 0.15);
+    color: #ff5a5a;
+}
+
+.status-badge.placed {
+    background: rgba(255, 190, 80, 0.15);
+    color: #ffbe50;
+}
+
+/* ---------- Items Table ---------- */
+
+.order-items table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 10px;
+}
+
+.order-items th,
+.order-items td {
+    padding: 10px;
+    text-align: left;
+}
+
+.order-items thead {
+    background: #1b1b1b;
+}
+
+.order-items th {
+    font-size: 13px;
+    text-transform: uppercase;
+    color: #aaa;
+}
+
+.order-items tbody tr {
+    border-bottom: 1px solid rgba(255,255,255,0.06);
+}
+
+.order-items tbody tr:hover {
+    background: rgba(255,255,255,0.04);
+}
+
+
+/* ---------- Hero Section ---------- */
+
+.hero-section {
+	height: 75vh;
+	background: linear-gradient(
+		rgba(0,0,0,0.95),
+		rgba(0,0,0,0.25)
+	),
+	url("../images/hero-section.jpg") center/cover no-repeat;
+	display: flex;
+	align-items: center;
+	padding: 0 80px;
+}
+
+.hero-content {
+	max-width: 620px;
+}
+
+.hero-content h1 {
+	font-size: 48px;
+	margin-bottom: 16px;
+}
+
+.hero-content p {
+	font-size: 18px;
+	color: #ccc;
+	margin-bottom: 30px;
+}
+
+.hero-buttons {
+	display: flex;
+	gap: 16px;
+}
+
+.btn-outline {
+	padding: 10px 18px;
+	border-radius: 8px;
+	border: 1px solid #6c7bff;
+	color: #6c7bff;
+	text-decoration: none;
+	font-weight: 500;
+}
+
+.btn-outline:hover {
+	background: #6c7bff;
+	color: #fff;
+}
+
+/* ---------- Sections ---------- */
+
+.section-title {
+	margin: 40px 0 20px;
+	font-size: 28px;
+}
+
+/* ---------- Game Cards Enhancements ---------- */
+
+.game-card {
+	background: #111;
+	border-radius: 16px;
+	padding: 14px;
+	box-shadow: 0 8px 25px rgba(0,0,0,0.6);
+	transition: transform 0.25s ease;
+}
+
+.game-card:hover {
+	transform: translateY(-6px);
+}
+
+.game-card img {
+	border-radius: 12px;
+}
+
+.game-card .category {
+	color: #aaa;
+	font-size: 14px;
+}
+
+.game-card .price {
+	margin: 6px 0 12px;
+	font-weight: 600;
+}
+
+
+/* Navbar Brand */
+
+.navbar {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	padding: 14px 30px;
+}
+
+.nav-left, .nav-right {
+	display: flex;
+	align-items: center;
+	gap: 18px;
+}
+
+.brand {
+	font-size: 20px;
+	font-weight: 700;
+	color: #6c7bff;
+	text-decoration: none;
+	margin-right: 20px;
+}
+
+.brand:hover {
+	color: #8b96ff;
+}
+
+.user-name {
+	margin-right: 10px;
+	color: #ddd;
+	font-weight: 500;
+}
+
+
+/* ===== Auth Pages (Login / Register) ===== */
+
+.auth-wrapper {
+    min-height: calc(100vh - 120px);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.auth-card {
+    background: #151515;
+    padding: 32px;
+    width: 100%;
+    max-width: 420px;
+    border-radius: 12px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+}
+
+.auth-card h2 {
+    margin-bottom: 20px;
+    text-align: center;
+    color: #fff;
+}
+
+.auth-card .input-box {
+    width: 100%;
+    margin-bottom: 14px;
+}
+
+.auth-card .btn {
+    width: 100%;
+    margin-top: 10px;
+}
+
+.auth-card .auth-footer {
+    text-align: center;
+    margin-top: 16px;
+    font-size: 14px;
+    color: #aaa;
+}
+
+.auth-card .auth-footer a {
+    color: #6c7cff;
+    text-decoration: none;
+}
+
+.auth-card .auth-footer a:hover {
+    text-decoration: underline;
+}

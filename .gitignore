@@ -1,0 +1,25 @@
+# Eclipse
+.classpath
+.project
+.settings/
+.idea/
+out/
+.smarttomcat/
+.metadata/
+
+# Build
+build/
+target/
+
+# Logs
+*.log
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Env
+.env
+
+# IntelliJ
+*.iml
