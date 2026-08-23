@@ -206,6 +206,67 @@ public class ProductDAOImpl implements ProductDAO {
 	}
 
 	@Override
+	public List<Product> searchProducts(String keyword, int categoryId) {
+
+		List<Product> products = new ArrayList<>();
+
+		String sql = "SELECT id, name, description, category_id, " +
+				"price, quantity, image_url, is_active " +
+				"FROM products " +
+				"WHERE is_active = true " +
+				"AND category_id = ? " +
+				"AND (name LIKE ? OR description LIKE ?) " +
+				"ORDER BY name";
+
+		try (Connection con = DBConnection.getConnection();
+		     PreparedStatement ps = con.prepareStatement(sql)) {
+
+			String searchKeyword = "%" + keyword + "%";
+
+			ps.setInt(1, categoryId);
+			ps.setString(2, searchKeyword);
+			ps.setString(3, searchKeyword);
+
+			try (ResultSet rs = ps.executeQuery()) {
+
+				while (rs.next()) {
+
+					Product product = new Product();
+
+					product.setId(rs.getInt("id"));
+					product.setName(rs.getString("name"));
+					product.setDescription(
+							rs.getString("description")
+					);
+					product.setCategoryId(
+							rs.getInt("category_id")
+					);
+					product.setPrice(
+							rs.getDouble("price")
+					);
+					product.setQuantity(
+							rs.getInt("quantity")
+					);
+					product.setImageUrl(
+							rs.getString("image_url")
+					);
+					product.setActive(
+							rs.getBoolean("is_active")
+					);
+
+					products.add(product);
+				}
+			}
+
+		} catch (Exception e) {
+
+			e.printStackTrace();
+		}
+
+		return products;
+	}
+
+	@Override
 	public boolean deleteProduct(int productId) {
 
 		String sql = "DELETE FROM products WHERE id = ?";

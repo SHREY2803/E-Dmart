@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.util.List;
 
 import business.ProductManager;
+
 import dao.CategoryDAO;
 import daoimpl.CategoryDAOImpl;
 
@@ -13,8 +14,8 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
-import model.Product;
 import model.Category;
+import model.Product;
 
 @WebServlet("/products")
 public class ProductListServlet extends HttpServlet {
@@ -22,12 +23,17 @@ public class ProductListServlet extends HttpServlet {
 	private ProductManager productManager;
 	private CategoryDAO categoryDAO;
 
+
 	@Override
 	public void init() {
 
-		productManager = new ProductManager();
-		categoryDAO = new CategoryDAOImpl();
+		productManager =
+				new ProductManager();
+
+		categoryDAO =
+				new CategoryDAOImpl();
 	}
+
 
 	@Override
 	protected void doGet(
@@ -35,19 +41,91 @@ public class ProductListServlet extends HttpServlet {
 			HttpServletResponse res)
 			throws ServletException, IOException {
 
-		// Get all products
-		List<Product> products =
-				productManager.getAllProducts();
 
-		// Get all categories dynamically from database
+		// ==========================================
+		// Read search parameter
+		// ==========================================
+
+		String keyword =
+				req.getParameter("search");
+
+
+		// ==========================================
+		// Read category parameter
+		// ==========================================
+
+		String categoryParameter =
+				req.getParameter("category");
+
+
+		Integer categoryId = null;
+
+
+		if (categoryParameter != null
+				&& !categoryParameter.trim().isEmpty()) {
+
+			try {
+
+				categoryId =
+						Integer.parseInt(
+								categoryParameter
+						);
+
+			} catch (NumberFormatException e) {
+
+				categoryId = null;
+			}
+		}
+
+
+		// ==========================================
+		// Get products
+		// ==========================================
+
+		List<Product> products =
+				productManager.searchProducts(
+						keyword,
+						categoryId
+				);
+
+
+		// ==========================================
+		// Get categories
+		// ==========================================
+
 		List<Category> categories =
 				categoryDAO.getAllCategories();
 
-		// Send data to JSP
-		req.setAttribute("products", products);
-		req.setAttribute("categories", categories);
 
+		// ==========================================
+		// Send data to JSP
+		// ==========================================
+
+		req.setAttribute(
+				"products",
+				products
+		);
+
+		req.setAttribute(
+				"categories",
+				categories
+		);
+
+		req.setAttribute(
+				"search",
+				keyword
+		);
+
+		req.setAttribute(
+				"selectedCategory",
+				categoryId
+		);
+
+
+		// ==========================================
 		// Open products page
+		// ==========================================
+
 		req.getRequestDispatcher(
 				"products.jsp"
 		).forward(req, res);

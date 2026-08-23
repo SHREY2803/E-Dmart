@@ -23,6 +23,7 @@
 
 </head>
 
+
 <body>
 
 <jsp:include page="components/navbar.jsp" />
@@ -41,37 +42,68 @@
         List<Category> categories =
                 (List<Category>)
                 request.getAttribute("categories");
+
+        String search =
+                (String)
+                request.getAttribute("search");
+
+        Integer selectedCategory =
+                (Integer)
+                request.getAttribute("selectedCategory");
     %>
 
 
-    <!-- ============================= -->
-    <!-- CATEGORY FILTER -->
-    <!-- ============================= -->
+    <!-- ===================================== -->
+    <!-- SEARCH + CATEGORY FILTER -->
+    <!-- ===================================== -->
 
-    <div style="margin-bottom: 25px;">
+    <form
+        action="<%= request.getContextPath() %>/products"
+        method="get"
+        style="margin-bottom: 30px;">
 
-        <label for="category">
-            Filter by Category:
-        </label>
+
+        <!-- Search -->
+
+        <input
+            class="input-box"
+            type="text"
+            name="search"
+            value="<%= search != null ? search : "" %>"
+            placeholder="Search products..."
+            style="max-width:400px;">
+
+
+        <!-- Category -->
 
         <select
-                id="category"
-                class="input-box"
-                style="max-width:300px;"
-                onchange="filterCategory(this.value)">
+            class="input-box"
+            name="category"
+            style="max-width:300px;">
 
             <option value="">
                 All Categories
             </option>
 
+
             <%
                 if (categories != null) {
 
-                    for (Category category : categories) {
+                    for (Category category :
+                            categories) {
+
+                        boolean selected =
+                                selectedCategory != null
+                                && selectedCategory
+                                    == category.getId();
             %>
 
-                <option value="<%= category.getId() %>">
+                <option
+                    value="<%= category.getId() %>"
+                    <%= selected ? "selected" : "" %>>
+
                     <%= category.getName() %>
+
                 </option>
 
             <%
@@ -81,29 +113,54 @@
 
         </select>
 
-    </div>
+
+        <!-- Search Button -->
+
+        <button
+            class="btn"
+            type="submit">
+
+            Search
+
+        </button>
 
 
-    <!-- ============================= -->
+        <!-- Clear Button -->
+
+        <a
+            class="btn"
+            href="<%= request.getContextPath() %>/products">
+
+            Clear
+
+        </a>
+
+    </form>
+
+
+    <!-- ===================================== -->
     <!-- PRODUCT GRID -->
-    <!-- ============================= -->
+    <!-- ===================================== -->
 
     <div class="game-grid">
 
+
         <%
-            if (products != null &&
-                    !products.isEmpty()) {
+            if (products != null
+                    && !products.isEmpty()) {
 
                 for (Product p : products) {
         %>
 
+
         <div class="game-card">
+
 
             <!-- Product Image -->
 
             <%
-                if (p.getImageUrl() != null &&
-                        !p.getImageUrl().isEmpty()) {
+                if (p.getImageUrl() != null
+                        && !p.getImageUrl().isEmpty()) {
             %>
 
                 <img
@@ -158,7 +215,7 @@
 
             <a
                 class="btn"
-                href="product-details?id=<%= p.getId() %>">
+                href="<%= request.getContextPath() %>/product-details?id=<%= p.getId() %>">
 
                 View Details
 
@@ -173,7 +230,7 @@
 
                 <a
                     class="btn"
-                    href="add-to-cart?productId=<%= p.getId() %>">
+                    href="<%= request.getContextPath() %>/add-to-cart?productId=<%= p.getId() %>">
 
                     Add to Cart
 
@@ -195,6 +252,7 @@
                 }
             %>
 
+
         </div>
 
 
@@ -204,40 +262,24 @@
             } else {
         %>
 
+
             <p>
-                No products available.
+                No products found.
             </p>
+
 
         <%
             }
         %>
+
 
     </div>
 
 </div>
 
 
-<script>
-
-function filterCategory(categoryId) {
-
-    if (categoryId === "") {
-
-        window.location.href =
-            "<%= request.getContextPath() %>/products";
-
-    } else {
-
-        window.location.href =
-            "<%= request.getContextPath() %>/products?category="
-            + categoryId;
-    }
-}
-
-</script>
-
-
 <jsp:include page="components/footer.jsp" />
+
 
 </body>
 

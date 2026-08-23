@@ -24,6 +24,9 @@ public interface ProductDAO {
     // Search products
     List<Product> searchProducts(String keyword);
 
+    // Search products by keyword and category
+    List<Product> searchProducts(String keyword, int categoryId);
+
     // Filter products by category
     List<Product> getProductsByCategory(int categoryId);
 
