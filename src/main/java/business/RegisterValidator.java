@@ -14,25 +14,41 @@ public class RegisterValidator {
 	public boolean validateAndRegister(String name, String email, String password) {
 
 		// Rule 1: No empty values
-		if (name == null || email == null || password == null || name.trim().isEmpty() || email.trim().isEmpty()
-				|| password.trim().isEmpty()) {
+		if (name == null || email == null || password == null ||
+				name.trim().isEmpty() ||
+				email.trim().isEmpty() ||
+				password.trim().isEmpty()) {
 			return false;
 		}
 
-		// Rule 2: Email should not already exist
+		// Rule 2: Basic email validation
+		if (!email.matches("^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+$")) {
+			return false;
+		}
+
+		// Rule 3: Basic password validation
+		if (password.length() < 6) {
+			return false;
+		}
+
+		// Rule 4: Email should not already exist
 		if (userDAO.isEmailExists(email)) {
 			return false;
 		}
-		
-		// Rule 3: Create user object
-        User user = new User();
-        user.setName(name);
-        user.setEmail(email);
-        user.setPassword(password);
-        user.setRole("CUSTOMER"); // default role
 
-        // Rule 4: Save user in DB
-        return userDAO.registerUser(user);
+		// Rule 5: Create user
+		User user = new User();
 
+		user.setName(name.trim());
+		user.setEmail(email.trim());
+		user.setPassword(password);
+
+		// IMPORTANT:
+		// Public registration can only create CUSTOMER accounts.
+		user.setRole("CUSTOMER");
+
+		// Rule 6: Save user
+		return userDAO.registerUser(user);
 	}
+
 }

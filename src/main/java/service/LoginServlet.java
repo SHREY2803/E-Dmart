@@ -23,36 +23,69 @@ public class LoginServlet extends HttpServlet {
     }
 
     @Override
-    protected void doPost(HttpServletRequest request, HttpServletResponse response)
+    protected void doPost(HttpServletRequest request,
+                          HttpServletResponse response)
             throws ServletException, IOException {
 
         // 1. Read form data
         String email = request.getParameter("email");
         String password = request.getParameter("password");
 
-        // 2. Call business layer
+        // 2. Validate login using business layer
         User user = loginValidator.validateLogin(email, password);
 
-        // 3. If login successful
+        // 3. If login is successful
         if (user != null) {
 
             // Create session
             HttpSession session = request.getSession();
+
             session.setAttribute("userId", user.getId());
             session.setAttribute("userName", user.getName());
             session.setAttribute("role", user.getRole());
-            
 
             // 4. Role-based redirection
-            if ("ADMIN".equalsIgnoreCase(user.getRole())) {
-                response.sendRedirect("admin/admin-dashboard.jsp");
+            String role = user.getRole();
+
+            if ("ADMIN".equalsIgnoreCase(role)) {
+
+                response.sendRedirect(
+                        request.getContextPath()
+                                + "/admin/admin-dashboard.jsp"
+                );
+
+            } else if ("STAFF".equalsIgnoreCase(role)) {
+
+                response.sendRedirect(
+                        request.getContextPath()
+                                + "/staff/staff-dashboard.jsp"
+                );
+
+            } else if ("CUSTOMER".equalsIgnoreCase(role)) {
+
+                response.sendRedirect(
+                        request.getContextPath()
+                                + "/customer/dashboard.jsp"
+                );
+
             } else {
-                response.sendRedirect("customer/dashboard.jsp");
+
+                // Unknown/invalid role
+                session.invalidate();
+
+                response.sendRedirect(
+                        request.getContextPath()
+                                + "/error.jsp"
+                );
             }
 
         } else {
+
             // 5. Invalid login
-            response.sendRedirect("error.jsp");
+            response.sendRedirect(
+                    request.getContextPath()
+                            + "/error.jsp"
+            );
         }
     }
 }
