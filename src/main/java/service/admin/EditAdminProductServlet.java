@@ -1,43 +1,139 @@
 package service.admin;
 
 import java.io.IOException;
+import java.util.List;
 
+import dao.CategoryDAO;
 import dao.ProductDAO;
+
+import daoimpl.CategoryDAOImpl;
 import daoimpl.ProductDAOImpl;
+
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
+
+import model.Category;
 import model.Product;
 
 @WebServlet("/admin/EditAdminProduct")
-public class EditAdminProductServlet extends HttpServlet{
-	private ProductDAO productDAO = new ProductDAOImpl();
-	
-	@Override
-	protected void doGet(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException {
-		// TODO Auto-generated method stub
-		
-		HttpSession session = req.getSession(false);
-        if (session == null || !"ADMIN".equals(session.getAttribute("role"))) {
-            res.sendRedirect(req.getContextPath() + "/access-denied.jsp");
+public class EditAdminProductServlet extends HttpServlet {
+
+    private ProductDAO productDAO =
+            new ProductDAOImpl();
+
+    private CategoryDAO categoryDAO =
+            new CategoryDAOImpl();
+
+
+    @Override
+    protected void doGet(
+            HttpServletRequest req,
+            HttpServletResponse res)
+            throws ServletException, IOException {
+
+
+        // ==========================================
+        // 1. Check ADMIN access
+        // ==========================================
+
+        HttpSession session =
+                req.getSession(false);
+
+        if (session == null ||
+                !"ADMIN".equalsIgnoreCase(
+                        (String) session.getAttribute("role"))) {
+
+            res.sendRedirect(
+                    req.getContextPath()
+                            + "/access-denied.jsp"
+            );
             return;
         }
-        
-        int productId = Integer.parseInt(req.getParameter("id"));
 
-        Product p = productDAO.getProductById(productId);
-        
-        req.setAttribute("id", p.getId());
-        req.setAttribute("name", p.getName());
-        req.setAttribute("price", p.getPrice());
-        req.setAttribute("category", p.getCategory());
-        req.setAttribute("description", p.getDescription());
-        req.setAttribute("imageUrl", p.getImageUrl());
-        
-        req.getRequestDispatcher("/admin/edit-product.jsp").forward(req, res);
-	}
 
+        try {
+
+            // ==========================================
+            // 2. Get product ID
+            // ==========================================
+
+            int productId =
+                    Integer.parseInt(
+                            req.getParameter("id")
+                    );
+
+
+            // ==========================================
+            // 3. Get product
+            // ==========================================
+
+            Product product =
+                    productDAO.getProductById(productId);
+
+
+            if (product == null) {
+
+                res.sendRedirect(
+                        req.getContextPath()
+                                + "/admin/AdminProduct?error=notfound"
+                );
+                return;
+            }
+
+
+            // ==========================================
+            // 4. Get categories from database
+            // ==========================================
+
+            List<Category> categories =
+                    categoryDAO.getAllCategories();
+
+
+            // ==========================================
+            // 5. Send data to JSP
+            // ==========================================
+
+            req.setAttribute(
+                    "product",
+                    product
+            );
+
+            req.setAttribute(
+                    "categories",
+                    categories
+            );
+
+
+            // ==========================================
+            // 6. Open edit page
+            // ==========================================
+
+            req.getRequestDispatcher(
+                    "/admin/edit-product.jsp"
+            ).forward(req, res);
+
+
+        } catch (NumberFormatException e) {
+
+            e.printStackTrace();
+
+            res.sendRedirect(
+                    req.getContextPath()
+                            + "/admin/AdminProduct?error=invalid"
+            );
+
+        } catch (Exception e) {
+
+            e.printStackTrace();
+
+            res.sendRedirect(
+                    req.getContextPath()
+                            + "/admin/AdminProduct?error=true"
+            );
+        }
+    }
 }

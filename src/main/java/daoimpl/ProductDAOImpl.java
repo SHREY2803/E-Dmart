@@ -1,214 +1,268 @@
 package daoimpl;
 
+import dao.ProductDAO;
+import model.Product;
+import util.DBConnection;
+
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.List;
 
-import dao.ProductDAO;
-import model.Product;
-import util.DBConnection;
-
 public class ProductDAOImpl implements ProductDAO {
 
 	@Override
 	public boolean addProduct(Product product) {
-		// TODO Auto-generated method stub
-		boolean status = false;
-		Connection con = null;
-		PreparedStatement ps = null;
 
-		String query = "INSERT INTO products(name, description, category, price, quantity, image_url) VALUES(?,?,?,?,?,?)";
+		String sql = "INSERT INTO products " +
+				"(name, description, category_id, price, quantity, image_url, is_active) " +
+				"VALUES (?, ?, ?, ?, ?, ?, ?)";
 
-		try {
-			con = DBConnection.getConnection();
-			ps = con.prepareStatement(query);
+		try (Connection con = DBConnection.getConnection();
+		     PreparedStatement ps = con.prepareStatement(sql)) {
 
 			ps.setString(1, product.getName());
 			ps.setString(2, product.getDescription());
-			ps.setString(3, product.getCategory());
+			ps.setInt(3, product.getCategoryId());
 			ps.setDouble(4, product.getPrice());
 			ps.setInt(5, product.getQuantity());
 			ps.setString(6, product.getImageUrl());
+			ps.setBoolean(7, product.isActive());
 
-			status = ps.executeUpdate() > 0;
-
-		} catch (Exception e) {
-			e.printStackTrace();
-		} finally {
-			try {
-				if (ps != null)
-					ps.close();
-				if (con != null)
-					con.close();
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-		}
-		return status;
-	}
-
-	@Override
-	public boolean updateProduct(Product product) {
-		// TODO Auto-generated method stub
-		boolean status = false;
-		Connection con = null;
-		PreparedStatement ps = null;
-
-		String query = "UPDATE products SET name=?, description=?, category=?, price=?, quantity=?, image_url=? WHERE id=?";
-
-		try {
-			con = DBConnection.getConnection();
-			ps = con.prepareStatement(query);
-
-			ps.setString(1, product.getName());
-			ps.setString(2, product.getDescription());
-			ps.setString(3, product.getCategory());
-			ps.setDouble(4, product.getPrice());
-			ps.setInt(5, product.getQuantity());
-			ps.setString(6, product.getImageUrl());
-			ps.setInt(7, product.getId());
-
-			status = ps.executeUpdate() > 0;
+			return ps.executeUpdate() > 0;
 
 		} catch (Exception e) {
 			e.printStackTrace();
-		} finally {
-			try {
-				if (ps != null)
-					ps.close();
-				if (con != null)
-					con.close();
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
+			return false;
 		}
-		return status;
-	}
-
-	@Override
-	public boolean deleteProduct(int productId) {
-		// TODO Auto-generated method stub
-		boolean status = false;
-		Connection con = null;
-		PreparedStatement ps = null;
-
-		String query = "DELETE FROM products WHERE id=?";
-
-		try {
-			con = DBConnection.getConnection();
-			ps = con.prepareStatement(query);
-
-			ps.setInt(1, productId);
-
-			status = ps.executeUpdate() > 0;
-
-		} catch (Exception e) {
-			e.printStackTrace();
-		} finally {
-			try {
-				if (ps != null)
-					ps.close();
-				if (con != null)
-					con.close();
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-		}
-
-		return status;
 	}
 
 	@Override
 	public List<Product> getAllProducts() {
-		List<Product> list = new ArrayList<>();
-		Connection con = null;
-		PreparedStatement ps = null;
-		ResultSet rs = null;
 
-		String query = "SELECT * FROM products";
-		try {
-			con = DBConnection.getConnection();
-			ps = con.prepareStatement(query);
+		List<Product> products = new ArrayList<>();
 
-			rs = ps.executeQuery();
+		String sql = "SELECT id, name, description, category_id, " +
+				"price, quantity, image_url, is_active " +
+				"FROM products ORDER BY id DESC";
+
+		try (Connection con = DBConnection.getConnection();
+		     PreparedStatement ps = con.prepareStatement(sql);
+		     ResultSet rs = ps.executeQuery()) {
 
 			while (rs.next()) {
-				Product p = new Product();
-				p.setId(rs.getInt("id"));
-				p.setName(rs.getString("name"));
-				p.setDescription(rs.getString("description"));
-				p.setCategory(rs.getString("category"));
-				p.setPrice(rs.getDouble("price"));
-				p.setQuantity(rs.getInt("quantity"));
-				p.setImageUrl(rs.getString("image_url"));
 
-				list.add(p);
-			}
-		} catch (Exception e) {
-			e.printStackTrace();
-		} finally {
-			try {
-				if (rs != null)
-					rs.close();
-				if (ps != null)
-					ps.close();
-				if (con != null)
-					con.close();
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
+				Product product = new Product();
 
-		}
-		return list;
-	}
-
-	@Override
-	public Product getProductById(int productId) {
-		// TODO Auto-generated method stub
-		Product product = null;
-		Connection con = null;
-		PreparedStatement ps = null;
-		ResultSet rs = null;
-
-		String query = "SELECT * FROM products WHERE id=?";
-
-		try {
-			con = DBConnection.getConnection();
-			ps = con.prepareStatement(query);
-
-			ps.setInt(1, productId);
-
-			rs = ps.executeQuery();
-
-			if (rs.next()) {
-				product = new Product();
 				product.setId(rs.getInt("id"));
 				product.setName(rs.getString("name"));
 				product.setDescription(rs.getString("description"));
-				product.setCategory(rs.getString("category"));
+				product.setCategoryId(rs.getInt("category_id"));
 				product.setPrice(rs.getDouble("price"));
 				product.setQuantity(rs.getInt("quantity"));
 				product.setImageUrl(rs.getString("image_url"));
+				product.setActive(rs.getBoolean("is_active"));
+
+				products.add(product);
 			}
 
 		} catch (Exception e) {
 			e.printStackTrace();
-		} finally {
-			try {
-				if (rs != null)
-					rs.close();
-				if (ps != null)
-					ps.close();
-				if (con != null)
-					con.close();
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
 		}
 
-		return product;
+		return products;
+	}
+
+	@Override
+	public Product getProductById(int id) {
+
+		String sql = "SELECT id, name, description, category_id, " +
+				"price, quantity, image_url, is_active " +
+				"FROM products WHERE id = ?";
+
+		try (Connection con = DBConnection.getConnection();
+		     PreparedStatement ps = con.prepareStatement(sql)) {
+
+			ps.setInt(1, id);
+
+			try (ResultSet rs = ps.executeQuery()) {
+
+				if (rs.next()) {
+
+					Product product = new Product();
+
+					product.setId(rs.getInt("id"));
+					product.setName(rs.getString("name"));
+					product.setDescription(rs.getString("description"));
+					product.setCategoryId(rs.getInt("category_id"));
+					product.setPrice(rs.getDouble("price"));
+					product.setQuantity(rs.getInt("quantity"));
+					product.setImageUrl(rs.getString("image_url"));
+					product.setActive(rs.getBoolean("is_active"));
+
+					return product;
+				}
+			}
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		return null;
+	}
+
+	@Override
+	public boolean updateProduct(Product product) {
+
+		String sql = "UPDATE products SET " +
+				"name = ?, description = ?, category_id = ?, " +
+				"price = ?, quantity = ?, image_url = ?, is_active = ? " +
+				"WHERE id = ?";
+
+		try (Connection con = DBConnection.getConnection();
+		     PreparedStatement ps = con.prepareStatement(sql)) {
+
+			ps.setString(1, product.getName());
+			ps.setString(2, product.getDescription());
+			ps.setInt(3, product.getCategoryId());
+			ps.setDouble(4, product.getPrice());
+			ps.setInt(5, product.getQuantity());
+			ps.setString(6, product.getImageUrl());
+			ps.setBoolean(7, product.isActive());
+			ps.setInt(8, product.getId());
+
+			return ps.executeUpdate() > 0;
+
+		} catch (Exception e) {
+			e.printStackTrace();
+			return false;
+		}
+	}
+
+	@Override
+	public boolean updateStock(int productId, int quantity) {
+
+		String sql = "UPDATE products SET quantity = ? WHERE id = ?";
+
+		try (Connection con = DBConnection.getConnection();
+		     PreparedStatement ps = con.prepareStatement(sql)) {
+
+			ps.setInt(1, quantity);
+			ps.setInt(2, productId);
+
+			return ps.executeUpdate() > 0;
+
+		} catch (Exception e) {
+			e.printStackTrace();
+			return false;
+		}
+	}
+
+	@Override
+	public List<Product> searchProducts(String keyword) {
+
+		List<Product> products = new ArrayList<>();
+
+		String sql = "SELECT id, name, description, category_id, " +
+				"price, quantity, image_url, is_active " +
+				"FROM products " +
+				"WHERE is_active = true " +
+				"AND (name LIKE ? OR description LIKE ?) " +
+				"ORDER BY name";
+
+		try (Connection con = DBConnection.getConnection();
+		     PreparedStatement ps = con.prepareStatement(sql)) {
+
+			String searchKeyword = "%" + keyword + "%";
+
+			ps.setString(1, searchKeyword);
+			ps.setString(2, searchKeyword);
+
+			try (ResultSet rs = ps.executeQuery()) {
+
+				while (rs.next()) {
+
+					Product product = new Product();
+
+					product.setId(rs.getInt("id"));
+					product.setName(rs.getString("name"));
+					product.setDescription(rs.getString("description"));
+					product.setCategoryId(rs.getInt("category_id"));
+					product.setPrice(rs.getDouble("price"));
+					product.setQuantity(rs.getInt("quantity"));
+					product.setImageUrl(rs.getString("image_url"));
+					product.setActive(rs.getBoolean("is_active"));
+
+					products.add(product);
+				}
+			}
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		return products;
+	}
+
+	@Override
+	public boolean deleteProduct(int productId) {
+
+		String sql = "DELETE FROM products WHERE id = ?";
+
+		try (Connection con = DBConnection.getConnection();
+		     PreparedStatement ps = con.prepareStatement(sql)) {
+
+			ps.setInt(1, productId);
+
+			return ps.executeUpdate() > 0;
+
+		} catch (Exception e) {
+			e.printStackTrace();
+			return false;
+		}
+	}
+
+	@Override
+	public List<Product> getProductsByCategory(int categoryId) {
+
+		List<Product> products = new ArrayList<>();
+
+		String sql = "SELECT id, name, description, category_id, " +
+				"price, quantity, image_url, is_active " +
+				"FROM products " +
+				"WHERE category_id = ? AND is_active = true " +
+				"ORDER BY name";
+
+		try (Connection con = DBConnection.getConnection();
+		     PreparedStatement ps = con.prepareStatement(sql)) {
+
+			ps.setInt(1, categoryId);
+
+			try (ResultSet rs = ps.executeQuery()) {
+
+				while (rs.next()) {
+
+					Product product = new Product();
+
+					product.setId(rs.getInt("id"));
+					product.setName(rs.getString("name"));
+					product.setDescription(rs.getString("description"));
+					product.setCategoryId(rs.getInt("category_id"));
+					product.setPrice(rs.getDouble("price"));
+					product.setQuantity(rs.getInt("quantity"));
+					product.setImageUrl(rs.getString("image_url"));
+					product.setActive(rs.getBoolean("is_active"));
+
+					products.add(product);
+				}
+			}
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		return products;
 	}
 
 }

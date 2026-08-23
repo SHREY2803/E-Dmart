@@ -5,12 +5,28 @@ import java.util.List;
 import model.Product;
 
 public interface ProductDAO {
-	// Admin operations
+
+    // Add product
     boolean addProduct(Product product);
-    boolean updateProduct(Product product);
-    boolean deleteProduct(int productId);
-    
- // Customer operations
+
+    // Get all products
     List<Product> getAllProducts();
-    Product getProductById(int productId);
+
+    // Get product by ID
+    Product getProductById(int id);
+
+    // Update product
+    boolean updateProduct(Product product);
+
+    // Update stock quantity
+    boolean updateStock(int productId, int quantity);
+
+    // Search products
+    List<Product> searchProducts(String keyword);
+
+    // Filter products by category
+    List<Product> getProductsByCategory(int categoryId);
+
+    // Delete product
+    boolean deleteProduct(int productId);
 }
