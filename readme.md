@@ -1,42 +1,138 @@
-# 🛒 E-Dmart – Java Web E-Commerce Application
+# 🛒 E-Dmart
 
-A full-stack **E-Commerce web application** built using Java Servlets, JSP, JDBC, MySQL, HTML, and CSS.
+### A Java-Based Online Grocery Shopping Platform
 
-The project follows a layered architecture and provides separate customer and administrator workflows, including product browsing, cart management, checkout, payments, order tracking, and administration.
+E-Dmart is a full-stack **online grocery shopping web application** developed using **Java, JSP, Servlets, JDBC, MySQL, HTML, and CSS**.
 
-> **Project Status:** Core functionality is implemented and tested. The remaining major work is the final UI/branding conversion from the old **GameStore** theme to **E-Dmart**.
+The application provides a complete e-commerce experience where customers can browse grocery products, search and filter products, manage their shopping cart, place orders, make simulated payments, and track their orders.
+
+It also provides a dedicated **Admin Panel** for managing products, categories, users, inventory, and customer orders.
 
 ---
 
-## ✨ Features
+## ✨ Key Features
 
-### 👤 Customer Features
+### 🛍️ Customer Shopping Experience
 
 - User registration and login
-- Session-based authentication
-- Role-based access control
-- Product listing and product details
-- Category-based product organization
-- Add products to cart
-- Remove products from cart
-- Cart quantity management
+- Product browsing
+- Product details
+- Product search
+- Category-based filtering
+- Shopping cart
+- Add/remove products from cart
+- Dynamic cart quantity management
 - Automatic subtotal and total calculation
-- Checkout flow
+- Stock availability validation
+- Checkout
 - Order placement
-- Simulated payment flow
-- Payment success/failure handling
+- Payment processing
 - Order history
-- Order item details
-- Order status tracking
-- Delivery fulfillment
-- Customer profile/dashboard
-- Purchased-product library
+- Order tracking
+- Purchased products section
+- Customer profile
+
+### 📦 Smart Inventory Management
+
+E-Dmart maintains product inventory throughout the shopping and ordering process.
+
+The application:
+
+- Displays available product quantity
+- Prevents customers from exceeding available stock
+- Validates stock during checkout
+- Automatically reduces inventory after an order
+- Prevents orders when sufficient stock is unavailable
+
+For example:
+
+```text
+Available Stock : 5
+Customer Orders : 3
+--------------------
+Remaining Stock : 2
+```
+
+This ensures that the inventory shown to customers remains consistent with the database.
+
+---
+
+## 🛒 Shopping Cart
+
+The cart system provides a complete shopping experience.
+
+Customers can:
+
+- Add products
+- Increase/decrease quantity
+- Remove products
+- View individual product prices
+- View product subtotals
+- View the complete cart total
+
+The application also prevents a customer from adding more products than the available inventory.
+
+---
+
+## 💳 Payment System
+
+E-Dmart contains a **simulated payment system** integrated with the order workflow.
+
+The payment module records:
+
+- Order ID
+- Payment method
+- Payment status
+- Transaction reference
+- Payment timestamp
+
+Supported payment states include:
+
+```text
+PENDING
+SUCCESS
+FAILED
+```
+
+A successful payment is associated with the corresponding order and stored in the database.
+
+> The payment system is designed for academic/demo purposes and does not connect to a real payment gateway.
 
 ---
 
 ## 📦 Order Management
 
-The application supports the following order lifecycle:
+E-Dmart provides complete order management from checkout to delivery.
+
+### Customer Order Flow
+
+```text
+Browse Products
+       ↓
+Add to Cart
+       ↓
+Checkout
+       ↓
+Place Order
+       ↓
+Stock Validation
+       ↓
+Stock Reduction
+       ↓
+Order Creation
+       ↓
+Payment
+       ↓
+Order Confirmation
+       ↓
+Order Tracking
+       ↓
+Delivery
+```
+
+### Order Status Tracking
+
+Orders move through different stages:
 
 ```text
 PLACED
@@ -50,300 +146,69 @@ OUT_FOR_DELIVERY
 DELIVERED
 ```
 
-Orders contain:
-
-- Order ID
-- Customer information
-- Products
-- Quantity
-- Price
-- Total amount
-- Order date
-- Order status
-- Fulfillment type
-- Delivery information
-
----
-
-## 💳 Payment
-
-The project contains a simulated payment workflow.
-
-Payment records support:
-
-- Payment method
-- Payment status
-- Transaction reference
-- Payment timestamp
-
-Supported payment statuses:
-
-- `PENDING`
-- `SUCCESS`
-- `FAILED`
-
-> Payment processing is simulated for this academic/demo project and is not connected to a real payment gateway.
-
----
-
-## 🛠️ Admin Features
-
-The administrator can:
-
-- Access the Admin Dashboard
-- Add products
-- Edit products
-- Delete products
-- Manage products
-- Manage categories
-- View registered users
-- View customer orders
-- View order items
-- Update order status
-- Manage product inventory
-- Upload product images
-
----
-
-## 🏗️ Project Architecture
-
-The application follows a layered architecture:
-
-```text
-                    E-Dmart
-                       │
-        ┌──────────────┴──────────────┐
-        │                             │
- Presentation Layer              Service Layer
-      (JSP)                       (Servlets)
-        │                             │
-        └──────────────┬──────────────┘
-                       │
-                Business Layer
-                (Business Logic)
-                       │
-                  DAO Layer
-             ┌─────────┴─────────┐
-             │                   │
-        DAO Interfaces      DAO Implementations
-             │                   │
-             └─────────┬─────────┘
-                       │
-                 MySQL Database
-```
-
-### Main Java Packages
-
-```text
-src/main/java
-├── business
-├── dao
-├── daoimpl
-├── model
-├── service
-└── util
-```
-
-### Web Layer
-
-```text
-src/main/webapp
-├── admin
-├── assets
-├── components
-├── customer
-└── JSP pages
-```
-
----
-
-## 🧩 Core Components
-
-### Business Layer
-
-The business layer contains components such as:
-
-- `CartManager`
-- `OrderManager`
-- `ProductManager`
-- `LoginValidator`
-- `RegisterValidator`
-
-### DAO Layer
-
-Database access is handled through DAO interfaces and implementations for:
-
-- Products
-- Categories
-- Cart
-- Orders
-- Users
-
-### Model Layer
-
-Main model classes include:
-
-- `User`
-- `Product`
-- `Category`
-- `Cart`
-- `Order`
-- `OrderItem`
-- `Payment`
-
-### Service Layer
-
-Important customer-side servlets include:
-
-- `LoginServlet`
-- `RegisterServlet`
-- `AddToCartServlet`
-- `CartServlet`
-- `RemoveFromCartServlet`
-- `CheckoutServlet`
-- `PlaceOrderServlet`
-- `PaymentServlet`
-- `MyOrdersServlet`
-- `MyLibraryServlet`
-- `ProfileServlet`
-
-Important admin-side servlets include:
-
-- `AdminProductsServlet`
-- `AddAdminProductServlet`
-- `EditAdminProductServlet`
-- `UpdateAdminProductServlet`
-- `DeleteAdminProductServlet`
-- `AllUsersAdminServlet`
-- `ViewAdminOrdersServlet`
-- `UpdateOrderStatusServlet`
-
----
-
-## 🗄️ Database
-
-The application uses **MySQL** as the relational database.
-
-The project database contains tables for:
-
-```text
-audit_logs
-cart
-categories
-order_items
-orders
-payments
-products
-returns
-stores
-users
-```
-
-### Main Database Relationship
-
-```text
-User
- │
- ├── Cart
- │
- └── Orders
-       │
-       ├── Order Items
-       │      │
-       │      └── Product
-       │
-       └── Payment
-```
-
-The order placement process uses a database transaction so that:
-
-- Stock reduction
-- Order creation
-- Order item creation
-- Cart clearing
-
-are handled together.
-
----
-
-## 🛒 Customer Order Flow
-
-```text
-Browse Products
-       ↓
-Search / Filter Products
-       ↓
-Add Product to Cart
-       ↓
-View Cart
-       ↓
-Checkout
-       ↓
-Place Order
-       ↓
-Reduce Product Stock
-       ↓
-Create Order Items
-       ↓
-Clear Cart
-       ↓
-Payment
-       ↓
-Payment Success
-       ↓
-Order Confirmation
-       ↓
-Admin Updates Status
-       ↓
-Customer Tracks Order
-       ↓
-Delivered
-```
-
----
-
-## 🛍️ Shopping Cart
-
-The cart system supports:
-
-- Adding products
-- Removing products
-- Increasing product quantity
-- Preventing quantity from exceeding available stock
-- Calculating product subtotal
-- Calculating total cart amount
-- Clearing the cart after successful order creation
-
-Example:
-
-```text
-Product Price × Quantity = Subtotal
-
-All Subtotals = Total Order Amount
-```
-
----
-
-## 📦 Inventory Management
-
-Product inventory is automatically updated during order placement.
+Customers can see the current status of their order through a visual order-progress tracker.
 
 For example:
 
 ```text
-Available Stock = 10
-Customer Orders = 3
-
-Remaining Stock = 7
+✓ Placed
+    ↓
+✓ Confirmed
+    ↓
+● Preparing
+    ↓
+○ Out for Delivery
+    ↓
+○ Delivered
 ```
 
-The application also prevents customers from adding more units to the cart than the available inventory.
+This gives customers a clear view of their order's current progress.
+
+---
+
+## 👨‍💼 Admin Panel
+
+E-Dmart includes a dedicated administrator dashboard.
+
+### Admin capabilities include:
+
+#### 📦 Product Management
+
+- Add new products
+- Edit products
+- Delete products
+- Update product prices
+- Update product quantities
+- Upload product images
+- Activate/deactivate products
+
+#### 🗂️ Category Management
+
+Administrators can manage product categories so that products can be organized and filtered efficiently.
+
+#### 👥 User Management
+
+Administrators can view registered users and their account information.
+
+#### 📋 Order Management
+
+Administrators can:
+
+- View customer orders
+- View order details
+- View ordered products
+- View quantities
+- View order totals
+- View customer information
+- Update order status
+
+This allows the administrator to control the complete order lifecycle.
 
 ---
 
 ## 🔐 Authentication & Authorization
 
-The application uses session-based authentication and role-based access control.
+The application uses **session-based authentication** and **role-based access control**.
 
 ### Supported Roles
 
@@ -353,51 +218,306 @@ ADMIN
 STAFF
 ```
 
-Customer functionality and administrative functionality are separated according to the user's role.
+Different parts of the application are protected according to the user's role.
 
-Unauthorized users are redirected to an access-denied page.
+For example:
+
+```text
+Customer
+   ↓
+Customer Dashboard
+Cart
+Orders
+Profile
+
+Admin
+   ↓
+Admin Dashboard
+Products
+Categories
+Users
+Orders
+```
+
+Unauthorized users are prevented from accessing restricted administrative functionality.
 
 ---
 
-## 🛠️ Tech Stack
+## 🌟 Project Highlights
 
-| Technology | Purpose |
+One of the main strengths of E-Dmart is that it is not simply a CRUD application.
+
+The project combines multiple real-world e-commerce concepts into one application.
+
+### 🔹 Transaction-Based Order Processing
+
+Order placement is handled using a database transaction.
+
+The following operations are coordinated as one logical transaction:
+
+```text
+Validate Cart
+      ↓
+Validate Stock
+      ↓
+Reduce Stock
+      ↓
+Create Order
+      ↓
+Create Order Items
+      ↓
+Clear Cart
+      ↓
+Commit Transaction
+```
+
+If an operation fails, the transaction can be rolled back to prevent inconsistent data.
+
+---
+
+### 🔹 Inventory-Aware Cart
+
+The cart is connected to actual product inventory.
+
+Customers cannot continuously increase the cart quantity beyond the available stock.
+
+This prevents situations such as:
+
+```text
+Database Stock = 2
+
+Customer Cart = 5  ❌
+```
+
+---
+
+### 🔹 Real Order Lifecycle
+
+Orders are not simply inserted into the database and forgotten.
+
+The administrator can update the order status, and customers can see the updated status through their order-tracking interface.
+
+```text
+Admin
+  ↓
+Update Order Status
+  ↓
+Database
+  ↓
+Customer
+  ↓
+Updated Order Tracker
+```
+
+---
+
+### 🔹 Integrated Payment & Orders
+
+Payments are connected to orders through the database.
+
+A successful payment is associated with the corresponding order using the order ID and stored with a transaction reference.
+
+This creates a realistic relationship between:
+
+```text
+Order
+  ↕
+Payment
+```
+
+---
+
+### 🔹 Layered Architecture
+
+The application separates responsibilities between:
+
+```text
+JSP
+ ↓
+Servlet
+ ↓
+Business Logic
+ ↓
+DAO
+ ↓
+MySQL
+```
+
+This makes the application easier to maintain, debug, and extend.
+
+---
+
+# 🏗️ System Architecture
+
+E-Dmart follows a layered Java web application architecture.
+
+```text
+┌─────────────────────────────┐
+│       Presentation          │
+│         JSP / HTML / CSS    │
+└──────────────┬──────────────┘
+               │
+               ↓
+┌─────────────────────────────┐
+│          Service            │
+│        Java Servlets        │
+└──────────────┬──────────────┘
+               │
+               ↓
+┌─────────────────────────────┐
+│          Business           │
+│       Business Logic        │
+└──────────────┬──────────────┘
+               │
+               ↓
+┌─────────────────────────────┐
+│            DAO              │
+│    Database Access Layer    │
+└──────────────┬──────────────┘
+               │
+               ↓
+┌─────────────────────────────┐
+│           MySQL             │
+│          Database           │
+└─────────────────────────────┘
+```
+
+---
+
+# 🗄️ Database Design
+
+The application uses **MySQL** as its relational database.
+
+Major entities include:
+
+```text
+Users
+   │
+   ├──────── Cart
+   │
+   └──────── Orders
+                 │
+                 ├──── Order Items ──── Products
+                 │
+                 └──── Payments
+```
+
+The database contains tables for major application modules such as:
+
+- Users
+- Products
+- Categories
+- Cart
+- Orders
+- Order Items
+- Payments
+- Stores
+- Audit Logs
+
+---
+
+# 🛠️ Technology Stack
+
+| Technology | Usage |
 |---|---|
-| Java | Backend programming |
-| Jakarta Servlets | Request handling |
-| JSP | Server-side UI |
-| JDBC | Database connectivity |
-| MySQL | Relational database |
-| Apache Tomcat | Application server |
-| HTML | Page structure |
-| CSS | User interface styling |
-| Eclipse IDE | Development environment |
+| **Java** | Backend development |
+| **Jakarta Servlets** | Request handling |
+| **JSP** | Dynamic web pages |
+| **JDBC** | Database connectivity |
+| **MySQL** | Database management |
+| **HTML5** | Page structure |
+| **CSS3** | UI styling |
+| **Apache Tomcat** | Application server |
+| **Eclipse IDE** | Development environment |
 
 ---
 
-## ⚙️ Setup Instructions
+# 📁 Project Structure
 
-### 1. Import the Project
+```text
+E-Dmart
+│
+├── src/main/java
+│   │
+│   ├── business
+│   │   ├── CartManager
+│   │   └── OrderManager
+│   │
+│   ├── dao
+│   │   ├── CartDAO
+│   │   ├── CategoryDAO
+│   │   ├── OrderDAO
+│   │   ├── ProductDAO
+│   │   └── UserDAO
+│   │
+│   ├── daoimpl
+│   │   └── DAO Implementations
+│   │
+│   ├── model
+│   │   ├── User
+│   │   ├── Product
+│   │   ├── Category
+│   │   ├── Cart
+│   │   ├── Order
+│   │   ├── OrderItem
+│   │   └── Payment
+│   │
+│   ├── service
+│   │   └── Customer Servlets
+│   │
+│   └── util
+│       └── Database Utilities
+│
+├── src/main/webapp
+│   │
+│   ├── admin
+│   │   ├── Admin Dashboard
+│   │   ├── Product Management
+│   │   └── Order Management
+│   │
+│   ├── customer
+│   │   ├── Orders
+│   │   ├── Profile
+│   │   └── Purchased Products
+│   │
+│   ├── components
+│   │   ├── Navbar
+│   │   └── Footer
+│   │
+│   ├── assets
+│   │   ├── css
+│   │   └── images
+│   │
+│   └── JSP Pages
+│
+└── README.md
+```
 
-Import the project into **Eclipse** as a Dynamic Web Project.
+---
 
-### 2. Configure Apache Tomcat
+# ⚙️ Installation & Setup
 
-Configure an Apache Tomcat server compatible with the Jakarta Servlet version used by the project.
+## 1. Clone / Import the Project
 
-### 3. Configure MySQL
+Import the project into **Eclipse IDE** as a Dynamic Web Project.
 
-Create the required MySQL database and tables using the project's database SQL script.
+## 2. Configure Apache Tomcat
 
-### 4. Configure Database Credentials
+Add the project to an Apache Tomcat server.
 
-Update the database configuration in:
+## 3. Configure MySQL
+
+Create the required database and tables using the provided SQL/database setup.
+
+## 4. Configure Database Connection
+
+Open:
 
 ```text
 src/main/java/util/DBConnection.java
 ```
 
-Configure:
+Update the database configuration:
 
 ```text
 Database URL
@@ -405,142 +525,75 @@ Username
 Password
 ```
 
-### 5. Deploy the Application
+## 5. Start the Application
 
-Run the project using Apache Tomcat.
+Run the application using Apache Tomcat.
 
-The application can then be accessed through the configured local context path.
+Open the application through the configured local server URL.
 
-> The development context path may still contain the older `GameStore` name. This will be addressed during the final E-Dmart UI/branding cleanup.
+
 
 ---
 
-## 🎨 Final UI & Branding
+# 🎯 Application Workflow
 
-The core backend and e-commerce functionality are implemented.
-
-The remaining major UI task is to completely transform the old **GameStore** identity into the final **E-Dmart** identity.
-
-### Current
+### Customer
 
 ```text
-🎮 GameStore
-```
-
-### Final
-
-```text
-🛒 E-Dmart
-```
-
-### UI Changes Planned
-
-- Replace `GameStore` branding with `E-Dmart`
-- Update navbar branding
-- Update footer branding
-- Update page titles
-- Update headings
-- Replace game-specific terminology
-- Update buttons and labels
-- Update favicon
-- Update logo/branding assets
-- Improve overall visual consistency
-- Remove remaining game-store references
-
-### Important
-
-The UI conversion should **not modify the already-working business logic**.
-
-The following functionality should remain unchanged:
-
-```text
-Authentication
-      ↓
-Products
-      ↓
-Categories
-      ↓
-Cart
-      ↓
+Register / Login
+       ↓
+Browse Products
+       ↓
+Search / Filter
+       ↓
+Add to Cart
+       ↓
 Checkout
-      ↓
-Orders
-      ↓
+       ↓
+Place Order
+       ↓
 Payment
-      ↓
-Order Tracking
-      ↓
-Admin Management
+       ↓
+Order Confirmation
+       ↓
+Track Order
+       ↓
+Receive Order
 ```
 
-Only the presentation and branding will be changed where necessary.
+### Administrator
+
+```text
+Admin Login
+     ↓
+Admin Dashboard
+     ↓
+┌───────────────┬───────────────┬───────────────┐
+│   Products    │     Users     │    Orders     │
+└───────────────┴───────────────┴───────────────┘
+       ↓                ↓                ↓
+ Manage Products    View Users      Update Status
+```
 
 ---
 
-## 📸 Screenshots
+# 🔮 Future Scope
 
-Recommended screenshots for the final project documentation:
+The architecture of E-Dmart can be extended with additional e-commerce capabilities such as:
 
-- Home / Product Listing
-- Product Details
-- Category Filtering
-- Shopping Cart
-- Checkout
-- Payment
-- Order Success
-- My Orders
-- Order Tracking
-- My Library
-- Admin Dashboard
-- Product Management
-- Category Management
-- User Management
-- Order Management
+- Real payment gateway integration
+- Product reviews and ratings
+- Wishlist
+- Coupons and promotional offers
+- Advanced product recommendations
+- Email/SMS order notifications
+- Delivery partner integration
+- Advanced analytics and sales reports
+- Cloud deployment
 
 ---
 
-## 🚀 Project Status
-
-### ✅ Completed
-
-- [x] User Registration
-- [x] User Login
-- [x] Role-based Access Control
-- [x] Product Listing
-- [x] Product Details
-- [x] Product Search
-- [x] Category Filtering
-- [x] Category Management
-- [x] Product Management
-- [x] Product Image Upload
-- [x] Shopping Cart
-- [x] Cart Quantity Management
-- [x] Stock Limitation
-- [x] Checkout
-- [x] Order Creation
-- [x] Inventory Reduction
-- [x] Cart Clearing After Order
-- [x] Payment Flow
-- [x] Payment Records
-- [x] Order History
-- [x] Order Items
-- [x] Order Status Updates
-- [x] Customer Order Tracking
-- [x] My Library / Purchased Products
-- [x] Admin Order Management
-- [x] Admin User Management
-
-### 🎯 Remaining
-
-- [ ] Complete E-Dmart UI/branding conversion
-- [ ] Final visual consistency pass
-- [ ] Replace remaining GameStore terminology
-- [ ] Update final screenshots
-- [ ] Final project review
-
----
-
-## 👨‍💻 Author
+# 👨‍💻 Author
 
 **Shrey Kulkarni**
 
@@ -548,6 +601,6 @@ Recommended screenshots for the final project documentation:
 
 ## 📌 Disclaimer
 
-This project is an academic/demo e-commerce application built using Java web technologies and MySQL.
+E-Dmart is an academic/demo e-commerce application developed using Java web technologies and MySQL.
 
-Payment processing is simulated and should not be used for real financial transactions.
+The payment functionality is simulated and is intended for demonstration purposes only.
