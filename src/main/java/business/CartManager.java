@@ -1,24 +1,54 @@
 package business;
 
-import daoimpl.CartDAOImpl;
-
 import java.util.List;
 
 import dao.CartDAO;
+import daoimpl.CartDAOImpl;
 import model.Cart;
 
 public class CartManager {
-	private CartDAO cartDAO = new CartDAOImpl();
-	
-	public boolean addToCart(int userId, int productId) {
-        return cartDAO.addToCart(userId, productId);
+
+    private CartDAO cartDAO =
+            new CartDAOImpl();
+
+
+    // ==========================================
+    // Add product to cart
+    // ==========================================
+
+    public boolean addToCart(
+            int userId,
+            int productId) {
+
+        return cartDAO.addToCart(
+                userId,
+                productId
+        );
     }
-	
-	public List<Cart> getUserCart(int userId) {
-        return cartDAO.getCartByUser(userId);
+
+
+    // ==========================================
+    // Get user's cart
+    // ==========================================
+
+    public List<Cart> getUserCart(
+            int userId) {
+
+        return cartDAO.getCartByUser(
+                userId
+        );
     }
-	
-	public boolean removeItem(int cartId) {
-        return cartDAO.removeFromCart(cartId);
+
+
+    // ==========================================
+    // Remove/decrease item
+    // ==========================================
+
+    public boolean removeItem(
+            int cartId) {
+
+        return cartDAO.removeFromCart(
+                cartId
+        );
     }
 }
