@@ -28,17 +28,14 @@
 
 <jsp:include page="../components/navbar.jsp" />
 
-
 <div class="container" style="max-width:480px">
 
     <h2>Edit Product</h2>
-
 
     <form
             action="<%= request.getContextPath() %>/admin/UpdateAdminProduct"
             method="post"
             enctype="multipart/form-data">
-
 
         <!-- Product ID -->
 
@@ -72,7 +69,7 @@
                 required>
 
 
-        <!-- Quantity -->
+        <!-- Stock Quantity -->
 
         <input
                 class="input-box"
@@ -95,7 +92,6 @@
                 Select Category
             </option>
 
-
             <%
                 if (categories != null) {
 
@@ -106,13 +102,13 @@
                                         == product.getCategoryId();
             %>
 
-                <option
-                        value="<%= category.getId() %>"
-                        <%= selected ? "selected" : "" %>>
+            <option
+                    value="<%= category.getId() %>"
+                    <%= selected ? "selected" : "" %>>
 
-                    <%= category.getName() %>
+                <%= category.getName() %>
 
-                </option>
+            </option>
 
             <%
                     }
@@ -157,6 +153,10 @@
                 name="image"
                 accept="image/*">
 
+        <small>
+            Leave empty to keep the current image.
+        </small>
+
 
         <!-- Submit -->
 
@@ -167,7 +167,6 @@
             Update Product
 
         </button>
-
 
     </form>
 

@@ -53,52 +53,66 @@ public class UpdateAdminProductServlet extends HttpServlet {
             return;
         }
 
+        String contextPath = req.getContextPath();
+
         try {
 
             // ==========================================
             // 2. Read form fields
             // ==========================================
 
-            int id =
-                    Integer.parseInt(
-                            req.getParameter("id")
-                    );
+            String idParameter = req.getParameter("id");
+            String name = req.getParameter("name");
+            String priceParameter = req.getParameter("price");
+            String categoryParameter = req.getParameter("category");
+            String quantityParameter = req.getParameter("quantity");
+            String description = req.getParameter("description");
 
-            String name =
-                    req.getParameter("name");
+            // Basic null validation
+
+            if (idParameter == null
+                    || name == null
+                    || priceParameter == null
+                    || categoryParameter == null
+                    || quantityParameter == null
+                    || description == null) {
+
+                res.sendRedirect(
+                        contextPath
+                                + "/admin/AdminProduct?error=invalid"
+                );
+                return;
+            }
+
+
+            // ==========================================
+            // 3. Convert values
+            // ==========================================
+
+            int id =
+                    Integer.parseInt(idParameter);
 
             double price =
-                    Double.parseDouble(
-                            req.getParameter("price")
-                    );
+                    Double.parseDouble(priceParameter);
 
             int categoryId =
-                    Integer.parseInt(
-                            req.getParameter("category")
-                    );
+                    Integer.parseInt(categoryParameter);
 
             int quantity =
-                    Integer.parseInt(
-                            req.getParameter("quantity")
-                    );
-
-            String description =
-                    req.getParameter("description");
+                    Integer.parseInt(quantityParameter);
 
 
             // ==========================================
-            // 3. Validate input
+            // 4. Validate values
             // ==========================================
 
-            if (name == null
-                    || name.trim().isEmpty()
-                    || description == null
+            if (name.trim().isEmpty()
                     || description.trim().isEmpty()
                     || price < 0
                     || quantity < 0) {
 
                 res.sendRedirect(
-                        req.getContextPath()
+                        contextPath
                                 + "/admin/AdminProduct?error=invalid"
                 );
                 return;
@@ -106,24 +120,7 @@ public class UpdateAdminProductServlet extends HttpServlet {
 
 
             // ==========================================
-            // 4. Check category exists
-            // ==========================================
-
-            Category category =
-                    categoryDAO.getCategoryById(categoryId);
-
-            if (category == null) {
-
-                res.sendRedirect(
-                        req.getContextPath()
-                                + "/admin/AdminProduct?error=invalid"
-                );
-                return;
-            }
-
-
-            // ==========================================
-            // 5. Get existing product
+            // 5. Check product exists
             // ==========================================
 
             Product existing =
@@ -132,20 +129,45 @@ public class UpdateAdminProductServlet extends HttpServlet {
             if (existing == null) {
 
                 res.sendRedirect(
-                        req.getContextPath()
+                        contextPath
                                 + "/admin/AdminProduct?error=notfound"
                 );
                 return;
             }
 
 
-            // Keep existing image if no new image uploaded
-            String imageUrl =
-                    existing.getImageUrl();
+            // ==========================================
+            // 6. Check category exists
+            // ==========================================
+
+            Category category =
+                    categoryDAO.getCategoryById(categoryId);
+
+            if (category == null) {
+
+                res.sendRedirect(
+                        contextPath
+                                + "/admin/AdminProduct?error=invalid"
+                );
+                return;
+            }
 
 
             // ==========================================
-            // 6. Handle new image
+            // 7. Keep existing image by default
+            // ==========================================
+
+            String imageUrl =
+                    existing.getImageUrl();
+
+            String oldImageUrl =
+                    existing.getImageUrl();
+
+            String newImagePath = null;
+
+
+            // ==========================================
+            // 8. Check whether new image was uploaded
             // ==========================================
 
             Part imagePart =
@@ -154,60 +176,58 @@ public class UpdateAdminProductServlet extends HttpServlet {
             if (imagePart != null
                     && imagePart.getSize() > 0) {
 
-                // Delete old image if it exists
-                if (imageUrl != null
-                        && !imageUrl.trim().isEmpty()) {
+                String originalFileName =
+                        imagePart.getSubmittedFileName();
 
-                    File oldImage =
-                            new File(
-                                    getServletContext()
-                                            .getRealPath("/")
-                                            + imageUrl
-                            );
+                if (originalFileName != null
+                        && !originalFileName.trim().isEmpty()) {
 
-                    if (oldImage.exists()) {
-                        oldImage.delete();
+                    // Generate unique filename
+
+                    String fileName =
+                            System.currentTimeMillis()
+                                    + "_"
+                                    + new File(originalFileName)
+                                    .getName();
+
+
+                    // Upload directory
+
+                    String uploadPath =
+                            getServletContext()
+                                    .getRealPath("/")
+                                    + "assets/images";
+
+
+                    File uploadDir =
+                            new File(uploadPath);
+
+                    if (!uploadDir.exists()) {
+                        uploadDir.mkdirs();
                     }
+
+
+                    // Save new image
+
+                    newImagePath =
+                            uploadPath
+                                    + File.separator
+                                    + fileName;
+
+                    imagePart.write(newImagePath);
+
+
+                    // Relative path stored in DB
+
+                    imageUrl =
+                            "assets/images/"
+                                    + fileName;
                 }
-
-
-                // Generate new filename
-                String fileName =
-                        System.currentTimeMillis()
-                                + "_"
-                                + imagePart.getSubmittedFileName();
-
-
-                String uploadPath =
-                        getServletContext()
-                                .getRealPath("/")
-                                + "assets/images";
-
-
-                File uploadDir =
-                        new File(uploadPath);
-
-                if (!uploadDir.exists()) {
-                    uploadDir.mkdirs();
-                }
-
-
-                // Save new image
-                imagePart.write(
-                        uploadPath
-                                + File.separator
-                                + fileName
-                );
-
-
-                imageUrl =
-                        "assets/images/"
-                                + fileName;
             }
 
 
             // ==========================================
-            // 7. Create updated Product object
+            // 9. Create updated Product
             // ==========================================
 
             Product product =
@@ -221,14 +241,15 @@ public class UpdateAdminProductServlet extends HttpServlet {
             product.setDescription(description.trim());
             product.setImageUrl(imageUrl);
 
-            // Preserve existing active/inactive status
+            // Preserve current active status
+
             product.setActive(
                     existing.isActive()
             );
 
 
             // ==========================================
-            // 8. Update database
+            // 10. Update database
             // ==========================================
 
             boolean updated =
@@ -236,30 +257,62 @@ public class UpdateAdminProductServlet extends HttpServlet {
 
 
             // ==========================================
-            // 9. Redirect
+            // 11. Handle result
             // ==========================================
 
             if (updated) {
 
+                // If a new image was successfully saved
+                // and DB update succeeded, delete old image.
+
+                if (newImagePath != null
+                        && oldImageUrl != null
+                        && !oldImageUrl.trim().isEmpty()) {
+
+                    File oldImage =
+                            new File(
+                                    getServletContext()
+                                            .getRealPath("/")
+                                            + oldImageUrl
+                            );
+
+                    if (oldImage.exists()) {
+                        oldImage.delete();
+                    }
+                }
+
+
                 res.sendRedirect(
-                        req.getContextPath()
+                        contextPath
                                 + "/admin/AdminProduct"
                 );
 
             } else {
 
+                // DB update failed.
+                // Remove newly uploaded image so that
+                // we don't leave an unnecessary file.
+
+                if (newImagePath != null) {
+
+                    File newImage =
+                            new File(newImagePath);
+
+                    if (newImage.exists()) {
+                        newImage.delete();
+                    }
+                }
+
                 res.sendRedirect(
-                        req.getContextPath()
+                        contextPath
                                 + "/admin/AdminProduct?error=failed"
                 );
             }
 
         } catch (NumberFormatException e) {
 
-            e.printStackTrace();
-
             res.sendRedirect(
-                    req.getContextPath()
+                    contextPath
                             + "/admin/AdminProduct?error=invalid"
             );
 
@@ -268,7 +321,7 @@ public class UpdateAdminProductServlet extends HttpServlet {
             e.printStackTrace();
 
             res.sendRedirect(
-                    req.getContextPath()
+                    contextPath
                             + "/admin/AdminProduct?error=true"
             );
         }

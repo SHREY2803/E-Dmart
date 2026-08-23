@@ -5,7 +5,6 @@ import java.util.List;
 
 import dao.CategoryDAO;
 import dao.ProductDAO;
-
 import daoimpl.CategoryDAOImpl;
 import daoimpl.ProductDAOImpl;
 
@@ -22,12 +21,8 @@ import model.Product;
 @WebServlet("/admin/EditAdminProduct")
 public class EditAdminProductServlet extends HttpServlet {
 
-    private ProductDAO productDAO =
-            new ProductDAOImpl();
-
-    private CategoryDAO categoryDAO =
-            new CategoryDAOImpl();
-
+    private ProductDAO productDAO = new ProductDAOImpl();
+    private CategoryDAO categoryDAO = new CategoryDAOImpl();
 
     @Override
     protected void doGet(
@@ -35,25 +30,21 @@ public class EditAdminProductServlet extends HttpServlet {
             HttpServletResponse res)
             throws ServletException, IOException {
 
-
         // ==========================================
         // 1. Check ADMIN access
         // ==========================================
 
-        HttpSession session =
-                req.getSession(false);
+        HttpSession session = req.getSession(false);
 
         if (session == null ||
                 !"ADMIN".equalsIgnoreCase(
                         (String) session.getAttribute("role"))) {
 
             res.sendRedirect(
-                    req.getContextPath()
-                            + "/access-denied.jsp"
+                    req.getContextPath() + "/access-denied.jsp"
             );
             return;
         }
-
 
         try {
 
@@ -61,19 +52,25 @@ public class EditAdminProductServlet extends HttpServlet {
             // 2. Get product ID
             // ==========================================
 
-            int productId =
-                    Integer.parseInt(
-                            req.getParameter("id")
-                    );
+            String idParameter = req.getParameter("id");
+
+            if (idParameter == null || idParameter.trim().isEmpty()) {
+                res.sendRedirect(
+                        req.getContextPath()
+                                + "/admin/AdminProduct?error=invalid"
+                );
+                return;
+            }
+
+            int productId = Integer.parseInt(idParameter);
 
 
             // ==========================================
-            // 3. Get product
+            // 3. Get product from database
             // ==========================================
 
             Product product =
                     productDAO.getProductById(productId);
-
 
             if (product == null) {
 
@@ -97,15 +94,8 @@ public class EditAdminProductServlet extends HttpServlet {
             // 5. Send data to JSP
             // ==========================================
 
-            req.setAttribute(
-                    "product",
-                    product
-            );
-
-            req.setAttribute(
-                    "categories",
-                    categories
-            );
+            req.setAttribute("product", product);
+            req.setAttribute("categories", categories);
 
 
             // ==========================================
@@ -116,10 +106,7 @@ public class EditAdminProductServlet extends HttpServlet {
                     "/admin/edit-product.jsp"
             ).forward(req, res);
 
-
         } catch (NumberFormatException e) {
-
-            e.printStackTrace();
 
             res.sendRedirect(
                     req.getContextPath()
