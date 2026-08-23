@@ -12,14 +12,14 @@
 
 <head>
 
-    <title>GameStore | Store</title>
+    <title>E-Dmart | Products</title>
 
     <link rel="stylesheet"
-          href="assets/css/style.css">
+          href="<%= request.getContextPath() %>/assets/css/style.css">
 
     <link rel="icon"
           type="image/png"
-          href="./assets/images/page_favicon.png">
+          href="<%= request.getContextPath() %>/assets/images/dmart_favicon.png">
 
 </head>
 
@@ -31,7 +31,9 @@
 
 <div class="container">
 
-    <h2>All Products</h2>
+    <h2 class="page-title">
+        All Products
+    </h2>
 
 
     <%
@@ -53,14 +55,14 @@
     %>
 
 
-    <!-- ===================================== -->
-    <!-- SEARCH + CATEGORY FILTER -->
-    <!-- ===================================== -->
+    <!-- =====================================================
+         SEARCH & CATEGORY FILTER
+    ====================================================== -->
 
     <form
         action="<%= request.getContextPath() %>/products"
         method="get"
-        style="margin-bottom: 30px;">
+        class="product-filter-form">
 
 
         <!-- Search -->
@@ -70,16 +72,14 @@
             type="text"
             name="search"
             value="<%= search != null ? search : "" %>"
-            placeholder="Search products..."
-            style="max-width:400px;">
+            placeholder="Search products...">
 
 
         <!-- Category -->
 
         <select
             class="input-box"
-            name="category"
-            style="max-width:300px;">
+            name="category">
 
             <option value="">
                 All Categories
@@ -128,7 +128,7 @@
         <!-- Clear Button -->
 
         <a
-            class="btn"
+            class="btn btn-clear"
             href="<%= request.getContextPath() %>/products">
 
             Clear
@@ -138,9 +138,9 @@
     </form>
 
 
-    <!-- ===================================== -->
-    <!-- PRODUCT GRID -->
-    <!-- ===================================== -->
+    <!-- =====================================================
+         PRODUCT GRID
+    ====================================================== -->
 
     <div class="game-grid">
 
@@ -169,6 +169,14 @@
                     alt="<%= p.getName() %>">
 
             <%
+                } else {
+            %>
+
+                <div class="product-image-placeholder">
+                    No Image
+                </div>
+
+            <%
                 }
             %>
 
@@ -182,7 +190,7 @@
 
             <!-- Price -->
 
-            <p>
+            <p class="price">
                 ₹ <%= p.getPrice() %>
             </p>
 
@@ -193,7 +201,7 @@
                 if (p.getQuantity() > 0) {
             %>
 
-                <p>
+                <p class="stock-available">
                     In Stock:
                     <%= p.getQuantity() %>
                 </p>
@@ -202,7 +210,7 @@
                 } else {
             %>
 
-                <p>
+                <p class="stock-unavailable">
                     Out of Stock
                 </p>
 
@@ -211,46 +219,48 @@
             %>
 
 
-            <!-- Product Details -->
+            <!-- Product Actions -->
 
-            <a
-                class="btn"
-                href="<%= request.getContextPath() %>/product-details?id=<%= p.getId() %>">
-
-                View Details
-
-            </a>
-
-
-            <!-- Add To Cart -->
-
-            <%
-                if (p.getQuantity() > 0) {
-            %>
+            <div class="product-actions">
 
                 <a
                     class="btn"
-                    href="<%= request.getContextPath() %>/add-to-cart?productId=<%= p.getId() %>">
+                    href="<%= request.getContextPath() %>/product-details?id=<%= p.getId() %>">
 
-                    Add to Cart
+                    View Details
 
                 </a>
 
-            <%
-                } else {
-            %>
 
-                <button
-                    class="btn"
-                    disabled>
+                <%
+                    if (p.getQuantity() > 0) {
+                %>
 
-                    Out of Stock
+                    <a
+                        class="btn"
+                        href="<%= request.getContextPath() %>/add-to-cart?productId=<%= p.getId() %>">
 
-                </button>
+                        Add to Cart
 
-            <%
-                }
-            %>
+                    </a>
+
+                <%
+                    } else {
+                %>
+
+                    <button
+                        class="btn"
+                        disabled>
+
+                        Out of Stock
+
+                    </button>
+
+                <%
+                    }
+                %>
+
+            </div>
 
 
         </div>
@@ -263,9 +273,17 @@
         %>
 
 
-            <p>
-                No products found.
-            </p>
+            <div class="empty-state">
+
+                <h3>
+                    No Products Found
+                </h3>
+
+                <p>
+                    Try changing your search or category filter.
+                </p>
+
+            </div>
 
 
         <%

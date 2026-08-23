@@ -10,14 +10,14 @@
 
 <head>
 
-    <title>GameStore | Product Details</title>
+    <title>E-Dmart | Product Details</title>
 
     <link rel="stylesheet"
-          href="assets/css/style.css">
+          href="<%= request.getContextPath() %>/assets/css/style.css">
 
     <link rel="icon"
           type="image/png"
-          href="./assets/images/page_favicon.png">
+          href="<%= request.getContextPath() %>/assets/images/dmart_favicon.png">
 
 </head>
 
@@ -31,29 +31,34 @@
 
     <%
         Product product =
-                (Product)
-                request.getAttribute("product");
+                (Product) request.getAttribute("product");
 
         Category category =
-                (Category)
-                request.getAttribute("category");
+                (Category) request.getAttribute("category");
 
 
         if (product == null) {
     %>
 
+        <div class="empty-state">
 
-        <h2>
-            Product not found
-        </h2>
+            <h2>
+                Product Not Found
+            </h2>
 
-        <a
-            class="btn"
-            href="products">
+            <p>
+                The product you're looking for could not be found.
+            </p>
 
-            Back to Store
+            <a
+                class="btn"
+                href="<%= request.getContextPath() %>/products">
 
-        </a>
+                Back to Products
+
+            </a>
+
+        </div>
 
 
     <%
@@ -61,18 +66,22 @@
     %>
 
 
+    <!-- =====================================================
+         PRODUCT DETAILS
+    ====================================================== -->
+
     <div class="details-card">
 
 
-        <!-- ============================= -->
-        <!-- PRODUCT IMAGE -->
-        <!-- ============================= -->
+        <!-- =================================================
+             PRODUCT IMAGE
+        ================================================== -->
 
         <div class="details-left">
 
             <%
                 if (product.getImageUrl() != null &&
-                        !product.getImageUrl().isEmpty()) {
+                    !product.getImageUrl().isEmpty()) {
             %>
 
                 <img
@@ -82,15 +91,23 @@
                     alt="<%= product.getName() %>">
 
             <%
+                } else {
+            %>
+
+                <div class="product-image-placeholder">
+                    No Image Available
+                </div>
+
+            <%
                 }
             %>
 
         </div>
 
 
-        <!-- ============================= -->
-        <!-- PRODUCT INFORMATION -->
-        <!-- ============================= -->
+        <!-- =================================================
+             PRODUCT INFORMATION
+        ================================================== -->
 
         <div class="details-right">
 
@@ -107,7 +124,7 @@
             %>
 
                 <p>
-                    <b>Category:</b>
+                    <strong>Category:</strong>
                     <%= category.getName() %>
                 </p>
 
@@ -119,59 +136,82 @@
             <!-- Price -->
 
             <p>
-
-                <b>Price:</b>
-
+                <strong>Price:</strong>
                 ₹ <%= product.getPrice() %>
-
             </p>
 
 
-            <!-- Stock -->
+            <!-- Availability -->
 
-            <p>
+            <%
+                if (product.getQuantity() > 0) {
+            %>
 
-                <b>Available:</b>
+                <p class="stock-available">
+                    <strong>Available:</strong>
+                    <%= product.getQuantity() %> units
+                </p>
 
-                <%= product.getQuantity() %>
+            <%
+                } else {
+            %>
 
-            </p>
+                <p class="stock-unavailable">
+                    <strong>Availability:</strong>
+                    Out of Stock
+                </p>
+
+            <%
+                }
+            %>
 
 
             <!-- Description -->
 
-            <p style="margin-top:12px;">
+            <%
+                if (product.getDescription() != null &&
+                    !product.getDescription().isEmpty()) {
+            %>
 
-                <%= product.getDescription() %>
+                <div class="product-description">
 
-            </p>
+                    <h4>
+                        Product Description
+                    </h4>
+
+                    <p>
+                        <%= product.getDescription() %>
+                    </p>
+
+                </div>
+
+            <%
+                }
+            %>
 
 
-            <!-- ============================= -->
-            <!-- ACTIONS -->
-            <!-- ============================= -->
+            <!-- =================================================
+                 ACTIONS
+            ================================================== -->
 
-            <div style="margin-top:18px;">
+            <div class="product-detail-actions">
 
 
                 <%
                     if (product.getQuantity() > 0) {
                 %>
 
-
                     <a
                         class="btn"
-                        href="add-to-cart?productId=<%= product.getId() %>">
+                        href="<%= request.getContextPath() %>/add-to-cart?productId=<%= product.getId() %>">
 
                         Add to Cart
 
                     </a>
 
-
                 <%
                     } else {
                 %>
-
 
                     <button
                         class="btn"
@@ -181,17 +221,16 @@
 
                     </button>
 
-
                 <%
                     }
                 %>
 
 
                 <a
-                    class="btn"
-                    href="products">
+                    class="btn btn-clear"
+                    href="<%= request.getContextPath() %>/products">
 
-                    Back
+                    Back to Products
 
                 </a>
 

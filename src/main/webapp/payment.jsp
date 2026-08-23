@@ -5,14 +5,14 @@
 
 <head>
 
-    <title>Payment</title>
+    <title>E-Dmart | Payment</title>
 
     <link rel="stylesheet"
           href="<%= request.getContextPath() %>/assets/css/style.css">
 
     <link rel="icon"
           type="image/png"
-          href="<%= request.getContextPath() %>/assets/images/page_favicon.png">
+          href="<%= request.getContextPath() %>/assets/images/dmart_favicon.png">
 
 </head>
 
@@ -21,62 +21,83 @@
 <jsp:include page="components/navbar.jsp" />
 
 
-<div class="container" style="max-width:420px">
-
-    <h2>Payment Details</h2>
+<div class="container">
 
 
-    <form
-            action="<%= request.getContextPath() %>/process-payment"
-            method="post">
+    <div class="payment-wrapper">
+
+        <div class="payment-card">
 
 
-        <!-- Order ID -->
+            <h2>
+                Payment
+            </h2>
 
-        <input
-                type="hidden"
-                name="orderId"
-                value="<%= request.getParameter("orderId") %>">
-
-
-        <!-- Payment Method -->
-
-        <select
-                class="input-box"
-                name="paymentMethod"
-                required>
-
-            <option value="">
-                Select Payment Method
-            </option>
-
-            <option value="UPI">
-                UPI
-            </option>
-
-            <option value="CARD">
-                Credit / Debit Card
-            </option>
-
-            <option value="NET_BANKING">
-                Net Banking
-            </option>
-
-        </select>
+            <p class="payment-subtitle">
+                Select your preferred payment method
+            </p>
 
 
-        <!-- Pay -->
-
-        <button
-                type="submit"
-                class="btn">
-
-            Pay Now
-
-        </button>
+            <form
+                action="<%= request.getContextPath() %>/process-payment"
+                method="post">
 
 
-    </form>
+                <!-- Order ID -->
+
+                <input
+                    type="hidden"
+                    name="orderId"
+                    value="<%= request.getParameter("orderId") %>">
+
+
+                <!-- Payment Method -->
+
+                <label for="paymentMethod">
+                    Payment Method
+                </label>
+
+                <select
+                    id="paymentMethod"
+                    class="input-box"
+                    name="paymentMethod"
+                    required>
+
+                    <option value="">
+                        Select Payment Method
+                    </option>
+
+                    <option value="UPI">
+                        UPI
+                    </option>
+
+                    <option value="CARD">
+                        Credit / Debit Card
+                    </option>
+
+                    <option value="NET_BANKING">
+                        Net Banking
+                    </option>
+
+                </select>
+
+
+                <!-- Pay -->
+
+                <button
+                    type="submit"
+                    class="btn payment-btn">
+
+                    Pay Now
+
+                </button>
+
+
+            </form>
+
+        </div>
+
+    </div>
 
 </div>
 

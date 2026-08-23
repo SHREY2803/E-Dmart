@@ -9,11 +9,11 @@
 
 <head>
 
-    <title>Your Cart</title>
+    <title>E-Dmart | Your Cart</title>
 
     <link rel="icon"
           type="image/png"
-          href="<%= request.getContextPath() %>/assets/images/page_favicon.png">
+          href="<%= request.getContextPath() %>/assets/images/dmart_favicon.png">
 
     <link rel="stylesheet"
           href="<%= request.getContextPath() %>/assets/css/style.css">
@@ -27,7 +27,9 @@
 
 <div class="container">
 
-    <h2>Your Cart</h2>
+    <h2 class="page-title">
+        Your Cart
+    </h2>
 
 
 <%
@@ -40,7 +42,30 @@
 
 <% if (cartItems == null || cartItems.isEmpty()) { %>
 
-    <p>Your cart is empty.</p>
+
+    <!-- =====================================================
+         EMPTY CART
+    ====================================================== -->
+
+    <div class="empty-state cart-empty">
+
+        <h3>
+            Your Cart is Empty
+        </h3>
+
+        <p>
+            Browse our products and add something to your cart.
+        </p>
+
+        <a
+            class="btn"
+            href="<%= request.getContextPath() %>/products">
+
+            Browse Products
+
+        </a>
+
+    </div>
 
 
 <% } else { %>
@@ -49,20 +74,21 @@
     <div class="cart-container">
 
 
-        <!-- ==========================================
+        <!-- =================================================
              LEFT SIDE : CART ITEMS
-             ========================================== -->
+        ================================================== -->
 
         <div class="cart-list">
 
 
-        <% for (Cart item : cartItems) {
+        <%
+            for (Cart item : cartItems) {
 
-               double subTotal =
-                       item.getPrice()
-                       * item.getQuantity();
+                double subTotal =
+                        item.getPrice()
+                        * item.getQuantity();
 
-               total += subTotal;
+                total += subTotal;
         %>
 
 
@@ -75,7 +101,7 @@
                     src="<%= request.getContextPath()
                             + "/"
                             + item.getImageUrl() %>"
-                    alt="Product Image">
+                    alt="<%= item.getProductName() %>">
 
 
                 <!-- Product Details -->
@@ -91,7 +117,7 @@
                     <div class="cart-meta">
 
                         <span>
-                            ₹ <%= item.getPrice() %>
+                            Price: ₹ <%= item.getPrice() %>
                         </span>
 
                         <span>
@@ -105,17 +131,12 @@
                     </div>
 
 
-                    <!-- ==================================
-                         REMOVE / DECREASE QUANTITY
-                         IMPORTANT:
-                         POST request because servlet uses
-                         doPost()
-                         ================================== -->
+                    <!-- Remove -->
 
                     <form
                         action="<%= request.getContextPath() %>/remove-from-cart"
                         method="post"
-                        style="display:inline;">
+                        class="cart-remove-form">
 
                         <input
                             type="hidden"
@@ -138,15 +159,17 @@
             </div>
 
 
-        <% } %>
+        <%
+            }
+        %>
 
 
         </div>
 
 
-        <!-- ==========================================
+        <!-- =================================================
              RIGHT SIDE : ORDER SUMMARY
-             ========================================== -->
+        ================================================== -->
 
         <div class="cart-summary">
 
@@ -154,6 +177,22 @@
             <h3>
                 Order Summary
             </h3>
+
+
+            <div class="summary-row">
+
+                <span>
+                    Items
+                </span>
+
+                <span>
+                    <%= cartItems.size() %>
+                </span>
+
+            </div>
+
+
+            <div class="summary-divider"></div>
 
 
             <p>
@@ -188,7 +227,6 @@
 
 
 <jsp:include page="components/footer.jsp" />
-
 
 </body>
 
