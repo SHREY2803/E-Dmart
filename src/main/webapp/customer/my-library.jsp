@@ -7,9 +7,13 @@
 <html>
 <head>
     <title>My Game Library</title>
-    <link rel="stylesheet" href="../assets/css/style.css">
-    <link rel="icon" type="image/png"
-	href="<%= request.getContextPath() %>/assets/images/page_favicon.png">
+
+    <link rel="stylesheet"
+          href="<%= request.getContextPath() %>/assets/css/style.css">
+
+    <link rel="icon"
+          type="image/png"
+          href="<%= request.getContextPath() %>/assets/images/page_favicon.png">
 </head>
 
 <body>
@@ -21,34 +25,45 @@
     <h2>My Game Library</h2>
 
     <%
-        List<OrderItem> games = (List<OrderItem>) request.getAttribute("games");
-
-        if (games == null || games.isEmpty()) {
-    %>
-        <p>You have not purchased any games yet.</p>
-    <%
-        } else {
+        List<OrderItem> games =
+            (List<OrderItem>) request.getAttribute("games");
     %>
 
-    <div class="game-grid">
-        <%
-            for (OrderItem game : games) {
-        %>
-            <div class="game-card">
-                <img src="<%= game.getImageUrl() %>" alt="<%= game.getProductName() %>">
-                <h3><%= game.getProductName() %></h3>
-                <p>Purchased at ₹ <%= game.getPrice() %></p>
+    <% if (games == null || games.isEmpty()) { %>
 
-                <button class="btn" disabled>Owned</button>
-            </div>
-        <%
-            }
-        %>
-    </div>
+        <p>You have not purchased any products yet.</p>
 
-    <%
-        }
-    %>
+    <% } else { %>
+
+        <div class="game-grid">
+
+            <% for (OrderItem game : games) { %>
+
+                <div class="game-card">
+
+                    <img
+                        src="<%= request.getContextPath() + "/" + game.getImageUrl() %>"
+                        alt="<%= game.getProductName() %>">
+
+                    <h3>
+                        <%= game.getProductName() %>
+                    </h3>
+
+                    <p>
+                        Purchased at ₹ <%= game.getPrice() %>
+                    </p>
+
+                    <button class="btn" disabled>
+                        Owned
+                    </button>
+
+                </div>
+
+            <% } %>
+
+        </div>
+
+    <% } %>
 
 </div>
 

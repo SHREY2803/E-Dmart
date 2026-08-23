@@ -348,7 +348,11 @@ public class CartDAOImpl implements CartDAO {
 
 		} catch (Exception e) {
 
-			e.printStackTrace();
+			throw new RuntimeException(
+					"Failed to clear cart for user ID: "
+							+ userId,
+					e
+			);
 		}
 	}
 }
